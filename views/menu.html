@@ -1,0 +1,49 @@
+
+<div class="container">
+     <div class="row row-content" ng-controller="MenuController">
+
+        <div class="col-xs-12">
+            <button ng-click='toggleDetails()' class="btn btn-xs btn-primary pull-right" type="button">
+{{showDetails ? 'Hide Details':'Show Details'}}
+</button>
+            <!--ِAdding bootstrap's tabs  to catograized the items -->
+            <ul class="nav nav-tabs" role="tablist">
+                <!-- ng-class to set the tab as active or not when  any tab is clicked   -->
+                <li role="presentation" ng-class="{active:isSelected(1)}">
+                    <!-- ng-click is used to set the this.tab vaiable to the number of the clicked tab                     -->
+                    <a role="tab" ng-click="select(1)">The menu</a>
+                </li>
+                <li role="presentation"
+                    ng-class="{active:isSelected(2)}">
+                    <a role="tab" ng-click="select(2)">Appetizers</a>
+                </li>
+                <li role="presentation" ng-class="{active:isSelected(3)}">
+                    <a role="tab" ng-click="select(3)">Mains</a>
+                </li>
+                <li role="presentation" ng-class="{active:isSelected(4)}">
+                    <a role="tab" ng-click="select(4)">Desserts</a>
+                </li>
+            </ul>
+            <!--  inclose the ul the contruct the menu -->
+            <div class="tab-content">
+            <ul class="media-list tab-pane fade in active">
+            <!-- filter looks for the item that have the filtText in its object -->
+            <li class="media" ng-repeat="dish in dishes | filter:filtText">
+                <div class="media-left media-middle">
+                    <a ui-sref="app.dishdetails({id: dish._id})">
+                    <img class="media-object img-thumbnail"
+                     ng-src={{dish.image}} alt="Uthappizza">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h2 class="media-heading">{{dish.name}}
+                     <span class="label label-danger">{{dish.label}}</span>
+                     <span class="badge">{{dish.price | currency}}</span></h2>
+                    <p ng-show="showDetails">{{dish.description}}</p>
+                </div>
+            </li>
+            </ul>
+         </div>
+        </div>
+    </div>
+</div>
