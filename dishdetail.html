@@ -26,93 +26,113 @@
 <body>
 
     <div class="container">
-        <div class="row row-content" ng-controller="dishDetailController as dshdtlCtrl">
-            <div class="col-xs-12">
-              <div class="media">
-                <div class="media-left">
-                  <a href="#">
-                    <img class="media-object img-thumbnail" ng-src="{{dshdtlCtrl.dish.image}}" alt="{{dshdtlCtrl.dish.name}}">
-                  </a>
+    <div class="row row-content" ng-controller="DishDetailController">
+        <div class="col-xs-12">
+           <button class="btn btn-xs btn-primary pull-right"
+                    type="button" ui-sref="app.menu">
+                    Back to Menu
+                </button>
+            <div class="media">
+                <div class="media-left media-middle">
+                    <a href="#">
+                    <img class="media-object img-thumbnail"
+                     ng-src={{dish.image}} alt="Uthappizza">
+                    </a>
                 </div>
                 <div class="media-body">
-                  <h2 class="media-heading">{{dshdtlCtrl.dish.name}}
-                    <span class="label label-danger">{{dshdtlCtrl.dish.label}}</span>
-                    <span class="badge">{{dshdtlCtrl.dish.price | currency}}</span>
-                  </h2>
-                  {{dshdtlCtrl.dish.description}}
+                    <h2 class="media-heading">{{dish.name}}
+                     <span class="label label-danger">{{dish.label}}</span>
+                     <span class="badge">{{dish.price | currency}}</span></h2>
+                    <p>{{dish.description}}</p>
                 </div>
-              </div>
-            </div>
-            <div class="col-xs-9 col-xs-offset-1">
-
-              <h4><strong>Customer Comments</strong> Sort by:   <input ng-model="sortCriteria"/> </h4>
-
-
-              <blockquote ng-repeat="dishComment in dshdtlCtrl.dish.comments | orderBy : sortCriteria ">
-                <p>{{dishComment.rating}} Stars</p>
-                <p>{{dishComment.comment}}</p>
-                  <footer>{{dishComment.author}}, {{dishComment.date | date}}</footer>
-              </blockquote>
             </div>
         </div>
 
+        <div class="col-xs-3 col-xs-offset-1">
+          <h4>Customer Comments</h4>
+        </div>
+
+        <div class="col-xs-6" style="margin-top: 5px">
+          <label for="order" style="color: silver">
+          Sort by: 
+          </label>
+          <input type="text" id="order" placeholder="rating" ng-model="ord">
+        </div>
+
+        <div class="col-xs-9 col-xs-offset-1">
+          <ul class="list-unstyled">
+            <li ng-repeat="com in dish.comments | orderBy: ord">
+              <blockquote>
+                <p>{{com.rating}} Stars</p>
+                <p>{{com.comment}}</p>
+                <footer>{{com.author}}, 
+                {{com.date | date: 'MMM. dd, yyyy'}}
+                </footer>
+              </blockquote>
+            </li>
+          </ul>
+        </div>
+
+    <div class="col-xs-12 col-xs-offset-1" style="left:15px">
+    <form class="form-horizontal" role="form" name="commentForm" id="commentForm" ng-submit="sendComment()"  novalidate>
+        <div class="form-group" ng-show="!commentForm.yourName.$error.required && !commentForm.comments.$error.required && !commentForm.yourName.$pristine && !commentForm.comments.$pristine ">
+          <ul class="list-unstyled" >
+            <li>
+              <blockquote>
+                <p>{{commentFormObj.rating}} Stars</p>
+                <p>{{commentFormObj.comments}}</p>
+                <footer>{{commentFormObj.yourName}}, 
+                {{com.date | date: 'MMM. dd, yyyy'}}
+                </footer>
+              </blockquote>
+            </li>
+          </ul>
+        </div>
+
+
+        <div class="form-group" ng-class="{ 'has-error' : commentForm.yourName.$error.required && !commentForm.yourName.$pristine }">
+            <label for="yourName" class="col-sm-2 control-label">Your Name</label>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" id="yourName" name="yourName" placeholder="Enter First Name"
+            ng-model="commentFormObj.yourName" required>
+            <span ng-show="commentForm.yourName.$error.required && !commentForm.yourName.$pristine" class="help-block">Your Name is required.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="radioButton" class="col-sm-2 control-label">Rating</label>  
+            <div class="col-sm-10" id="radioButton"  ng-model="commentFormObj.rating">
+                <label class="radio-inline"><input type="radio" name="rating" ng-model = "value" ng-change="setRating(value)" value="1"> 1</label>  
+                <label class="radio-inline"><input type="radio" name="rating" ng-model = "value" ng-change="setRating(value)" value="2"> 2</label>
+                <label class="radio-inline"><input type="radio" name="rating" ng-model = "value"  ng-change="setRating(value)" value="3"> 3</label>
+                <label class="radio-inline"><input type="radio" name="rating" ng-model = "value"  ng-change="setRating(value)" value="4"> 4</label> 
+                <label class="radio-inline"><input type="radio" name="rating" ng-model = "value"  value="5" ng-change="setRating(value)" checked> 5</label> 
+            </div>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error' : commentForm.comments.$error.required && !commentForm.comments.$pristine }">
+            <label for="comments" class="col-sm-2 control-label">Your comments</label>
+            <div class="col-sm-10">
+                <textarea id="comments" name="comments" class="form-control" rows="12"
+                    ng-model="commentFormObj.comments" required>
+                </textarea>
+                <span ng-show="commentForm.comments.$error.required && !commentForm.comments.$pristine" class="help-block">Your comment is required.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary" ng-disabled="commentForm.$invalid">Send Feedback</button>
+            </div>
+        </div>
+
+    </form>
     </div>
-
+        </div>
+</div>
+    <!-- build:js scripts/main.js -->
     <script src="../bower_components/angular/angular.min.js"></script>
-	<script>
+    <script src="scripts/app.js"></script>
 
-        var app = angular.module('confusionApp',[]);
-        
-        app.controller('dishDetailController', function() {
-
-            var dish={
-                          name:'Uthapizza',
-                          image: 'images/uthapizza.png',
-                          category: 'mains', 
-                          label:'Hot',
-                          price:'4.99',
-                          description:'A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.',
-                           comments: [
-                               {
-                                   rating:5,
-                                   comment:"Imagine all the eatables, living in conFusion!",
-                                   author:"John Lemon",
-                                   date:"2012-10-16T17:57:28.556094Z"
-                               },
-                               {
-                                   rating:4,
-                                   comment:"Sends anyone to heaven, I wish I could get my mother-in-law to eat it!",
-                                   author:"Paul McVites",
-                                   date:"2014-09-05T17:57:28.556094Z"
-                               },
-                               {
-                                   rating:3,
-                                   comment:"Eat it, just eat it!",
-                                   author:"Michael Jaikishan",
-                                   date:"2015-02-13T17:57:28.556094Z"
-                               },
-                               {
-                                   rating:4,
-                                   comment:"Ultimate, Reaching for the stars!",
-                                   author:"Ringo Starry",
-                                   date:"2013-12-02T17:57:28.556094Z"
-                               },
-                               {
-                                   rating:2,
-                                   comment:"It's your birthday, we're gonna party!",
-                                   author:"25 Cent",
-                                   date:"2011-12-02T17:57:28.556094Z"
-                               }
-                               
-                           ]
-                    };
-            
-            this.dish = dish;
-            
-        });
-
-    </script>
-
+<!-- endbuild -->
+    <script src="scripts/app.js"></script>
 </body>
 
 </html>
